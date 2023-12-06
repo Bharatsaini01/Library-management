@@ -71,31 +71,70 @@ def add_book(data):
     return False
 
 def update_user_details(data):
-    check = cursor.execute("UPDATE USERS SET (NAME,USERNAME,PASSWORD,MOBILE_NO) = (?,?,?,?) WHERE USERNAME = (?)",data)
+    cursor.execute("UPDATE USERS SET (NAME,USERNAME,PASSWORD,MOBILE_NO) = (?,?,?,?) WHERE USERNAME = (?)",data)
     connection.commit()
-    if check:
-        return True
-    return False
+    
 
 def update_book_details(data):
-    check = cursor.execute("UPDATE BOOKS SET (AUTHOR,BOOK_NAME,PUBLICATION_COMPANY) = (?,?,?) WHERE BOOK_NAME = (?)",data)
+    cursor.execute("UPDATE BOOKS SET (AUTHOR,BOOK_NAME,PUBLICATION_COMPANY) = (?,?,?) WHERE BOOK_NAME = (?)",data)
     connection.commit()
-    if check:
-        return True
-    return False
+    
+
+def get_user(username):
+    cursor.execute("SELECT * FROM USERS WHERE USERNAME=(?)",(username,))
+    check = cursor.fetchone()
+    return check
+
+def get_book(book_name):
+    cursor.execute("SELECT * FROM BOOKS WHERE BOOK_NAME=(?)",(book_name,))
+    check = cursor.fetchone()
+    return check
+
+def check_rented_user(book_name):
+    cursor.execute("SELECT RENTED_USER FROM BOOKS WHERE BOOK_NAME=(?)",(book_name,))
+    check = cursor.fetchone()
+    return check
+
+
+def get_books_list():
+    cursor.execute("SELECT * FROM BOOKS")
+    book_list = cursor.fetchall()
+    return book_list
 
 def delete_user(username):
-    check = cursor.execute("DELETE USERS WHERE USERNAME = (?)",username)
-    connection.commit()
-    if check:
+    if get_user(username):
+        cursor.execute("DELETE FROM USERS WHERE USERNAME = (?)",(username,))
+        connection.commit()
+        return True
+    return False
+        
+
+def delete_book(book_name):
+    if get_book(book_name):
+        cursor.execute("DELETE FROM BOOKS WHERE BOOK_NAME = (?)",(book_name,))
+        connection.commit()
         return True
     return False
 
-def delete_book(book_name):
-    check = cursor.execute("DELETE BOOKS WHERE BOOK_NAME = (?)",book_name)
+def rent_book(data):
+    cursor.execute("UPDATE BOOKS SET (RENTED_DATE,RENTED_USER) = (?,?) WHERE BOOK_NAME = (?)", data)
     connection.commit()
-    if check:
-        return True
-    return False
+
+def rent_out_book(rent_out_book_name):
+    cursor.execute("UPDATE BOOKS SET (RENTED_DATE,RENTED_USER) = (NULL,NULL) WHERE BOOK_NAME = (?)",(rent_out_book_name,))
+    connection.commit()
+
+def rented_books(username):
+    cursor.execute("SELECT * FROM BOOKS WHERE RENTED_USER = (?)",(username,))
+    data = cursor.fetchall()
+    return data
+
+def get_rented_data(username):
+    cursor.execute("SELECT RENTED_DATE,BOOK_NAME FROM BOOKS WHERE RENTED_USER=(?)",(username,))
+    check = cursor.fetchall()
+    return check
+
+
+
 
 connection.commit()
