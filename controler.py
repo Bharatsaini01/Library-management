@@ -8,23 +8,44 @@ def admin_authotication(username,password):
     return False
 
 
-def check_librarian(data):
-    if models.add_librarian(data):
+def check_librarian(data,username):
+    if models.get_librarian(username):
+        print("This username already exists")    
+    else:
+        models.add_librarian(data)
         print("Librarian add successfully")
-    else:
-        print("This username already exists")
+        
 
-def check_user(data):
-    if models.add_user(data):
+def check_user(data,username):
+    if models.get_user(username):
+        print("This username already exists")   
+    else:
+        models.add_user(data)
         print("User add successfully")
-    else:
-        print("This username already exists")
 
-def check_book(data):
-    if models.add_book(data):
-        print("Book add successfully")
-    else:
+def check_book(data,book_name):
+    if models.get_book(book_name):
         print("This book already exists")
+    else:
+        models.add_book(data)
+        print("Book add successfully")
+
+def delete_user(username):
+    if models.get_user(username):
+        rented_books = models.get_rented_data(username)
+        if rented_books != None:
+            for i in rented_books:
+                rented_date,book_name = i
+                models.rent_out_book(book_name)
+            models.delete_user(username)
+            return True
+        else:
+            models.delete_user(username)
+            return True
+    else:
+        return False
+
+        
 
 def rent_book(data,rent_book_name):
     rented_user = models.check_rented_user(rent_book_name)

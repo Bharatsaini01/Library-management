@@ -49,26 +49,19 @@ def user_validation(username,password):
     return False
 
 def add_librarian(data):
-    check = cursor.execute("INSERT INTO LIBRARIAN VALUES(?,?,?,?)",data)
+    cursor.execute("INSERT INTO LIBRARIAN VALUES(?,?,?,?)",data)
     connection.commit()
-    if check:
-        return True
-    return False
+    
 
 def add_user(data):
-    check = cursor.execute("INSERT INTO USERS VALUES(?,?,?,?)",data)
+    cursor.execute("INSERT INTO USERS VALUES(?,?,?,?)",data)
     connection.commit()
-    if check:
-        return True
-    return False
+    
 
 def add_book(data):
-    check = cursor.execute("INSERT INTO BOOKS (AUTHOR,BOOK_NAME,PUBLICATION_COMPANY) VALUES(?,?,?)",data)
+    cursor.execute("INSERT INTO BOOKS (AUTHOR,BOOK_NAME,PUBLICATION_COMPANY) VALUES(?,?,?)",data)
     connection.commit()
-    if check:
-        return True
-        connection.close()
-    return False
+    connection.close()
 
 def update_user_details(data):
     cursor.execute("UPDATE USERS SET (NAME,USERNAME,PASSWORD,MOBILE_NO) = (?,?,?,?) WHERE USERNAME = (?)",data)
@@ -79,6 +72,10 @@ def update_book_details(data):
     cursor.execute("UPDATE BOOKS SET (AUTHOR,BOOK_NAME,PUBLICATION_COMPANY) = (?,?,?) WHERE BOOK_NAME = (?)",data)
     connection.commit()
     
+def get_librarian(username):
+    cursor.execute("SELECT * FROM LIBRARIAN WHERE USERNAME=(?)",(username,))
+    check = cursor.fetchone()
+    return check
 
 def get_user(username):
     cursor.execute("SELECT * FROM USERS WHERE USERNAME=(?)",(username,))

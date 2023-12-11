@@ -97,7 +97,7 @@ def add_librarian():
     password = input("Create Password : ")
     mobile_no = input("Enter Mobile_No : ")
     data = (name,username,password,mobile_no)
-    controler.check_librarian(data)
+    controler.check_librarian(data,username)
 
 def add_user():
     name = input("Enter User Name : ")
@@ -105,14 +105,14 @@ def add_user():
     password = input("Create Password : ")
     mobile_no = input("Enter Mobile_No : ")
     data = (name,username,password,mobile_no)
-    controler.check_user(data)
+    controler.check_user(data,username)
 
 def add_book():
     author = input("Enter Author Name : ")
     book_name = input("Enter Book Name : ")
     publication_company = input("Enter Publication Company : ")
     data = (author,book_name,publication_company)
-    controler.check_book(data)
+    controler.check_book(data,book_name)
 
 def update_user_details():
     username = input("Enter current username : ")
@@ -137,7 +137,7 @@ def update_book_details():
 
 def delete_user():
     username = input("Enter Username For Delete User : ")
-    if models.delete_user(username):
+    if controler.delete_user(username):
         print("User Delete Successfully")
     else:
         print("Username Already not exists")
@@ -182,6 +182,7 @@ def login():
     username = input("Enter Your Username : ")
     password = input("Enter Your Password : ")
     current_date = datetime.datetime.now().date()
+    current_date = datetime.date(2024,1,1)
     if controler.admin_authotication(username,password):
         print("WELCOME LIBRARY MANAGEMENT SYSTEM")
         admin_functions_key()
